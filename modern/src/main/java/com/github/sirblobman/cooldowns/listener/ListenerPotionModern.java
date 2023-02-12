@@ -80,54 +80,7 @@ public final class ListenerPotionModern extends CooldownListener {
     public void onEntityPotionEffect(EntityPotionEffectEvent e) {
         printDebug("Detected EntityPotionEffectEvent...");
 
-        Action action = e.getAction();
-        if (action != Action.ADDED && action != Action.CHANGED) {
-            printDebug("Action type is not ADDED or CHANGED, ignoring.");
-            return;
-        }
-
-        Entity entity = e.getEntity();
-        if (!(entity instanceof Player)) {
-            printDebug("Entity is not player, ignoring.");
-            return;
-        }
-
-        Player player = (Player) entity;
-        PotionEffect newEffect = e.getNewEffect();
-        if (newEffect == null) {
-            printDebug("New effect is null, ignoring.");
-            return;
-        }
-
-        Set<ICooldownSettings> cooldownSettingsList = fetchCooldowns(CooldownType.POTION);
-        if (cooldownSettingsList.isEmpty()) {
-            printDebug("No POTION cooldowns available, ignoring.");
-            return;
-        }
-
-        ICooldownData cooldownData = getCooldownData(player);
-        PotionEffectType bukkitPotion = newEffect.getType();
-        XPotion potion = XPotion.matchXPotion(bukkitPotion);
-
-        Set<ICooldownSettings> allActiveCooldowns = cooldownData.getActiveCooldowns(CooldownType.POTION);
-        Set<ICooldownSettings> activeCooldowns = filter(allActiveCooldowns, potion);
-        ICooldownSettings activeCooldown = checkActiveCooldowns(player, activeCooldowns);
-
-        if (activeCooldown != null) {
-            printDebug("Found active cooldown '" + activeCooldown.getId() + "for potion " + potion + ".");
-            e.setCancelled(true);
-            sendCooldownMessage(player, activeCooldown, potion);
-            printDebug("Cancelled event and sent message to player.");
-            updateInventoryLater(player);
-            printDebug("Triggered player inventory update for one tick later.");
-            return;
-        } else {
-            printDebug("No active cooldowns for potion " + potion + ".");
-        }
-
-        Set<ICooldownSettings> allValidCooldowns = fetchCooldowns(CooldownType.POTION);
-        Set<ICooldownSettings> validCooldowns = filter(allValidCooldowns, potion);
-        checkValidCooldowns(player, validCooldowns);
+        return;
     }
 
     private boolean isNotPotion(ItemStack item) {
